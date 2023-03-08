@@ -21,3 +21,9 @@ Install Laravel dependencies
 ```
 docker exec -it laravel-powerful-apps-php-1 composer install
 ```
+
+Generate the application key
+
+```
+php artisan key:generate
+```
