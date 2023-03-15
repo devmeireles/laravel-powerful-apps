@@ -2,34 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
 use Illuminate\Http\Request;
-use stdClass;
 
 class ProductController extends Controller
 {
-
-    private $products = [];
-
-    function __construct()
-    {
-        $this->products = [
-            (object)[
-                'id'    =>  1,
-                'name'  =>  'New Shoes'
-            ],
-            (object)[
-                'id'    =>  2,
-                'name'  =>  'Cool T-shirt'
-            ],
-        ];
-    }
 
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return response()->json($this->products);
+        $products = Product::all();
+        return response()->json([
+            "success"   =>  true,
+            "data"      =>  $products,
+        ]);
     }
 
     /**
@@ -45,13 +33,11 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        $product = new stdClass();
+        $product = new Product();
         $product->name = $request->input('name');
-        $product->id = date_timestamp_get(date_create());
-
-        array_push($this->products, $product);
-
-        print_r($this->products);
+        $product->description = $request->input('description');
+        $product->price = $request->input('price');
+        $product->save();
 
         return response()->json([
             'success'   =>  true,
@@ -64,8 +50,7 @@ class ProductController extends Controller
      */
     public function show(int $id)
     {
-        $search = array_filter($this->products, fn ($item) => $item->id === $id);
-        $product = reset($search);
+        $product = Product::find($id);
 
         return response()->json([
             'success'   =>  true,
@@ -86,10 +71,11 @@ class ProductController extends Controller
      */
     public function update(Request $request, int $id)
     {
-        $search = array_filter($this->products, fn ($item) => $item->id === $id);
-        $product = reset($search);
-
+        $product = Product::find($id);
         $product->name = $request->input('name');
+        $product->description = $request->input('description');
+        $product->price = $request->input('price');
+        $product->save();
 
         return response()->json([
             'success'   =>  true,
@@ -102,10 +88,6 @@ class ProductController extends Controller
      */
     public function destroy(int $id)
     {
-        $search = array_filter($this->products, fn ($item) => $item->id === $id);
-        $key = array_key_first($search);
-        unset($this->products[$key]);
-
-        var_dump($this->products);
+        Product::destroy($id);
     }
 }

@@ -18,6 +18,6 @@ Route::name('product.')->group(function () {
     Route::get('/products', [ProductController::class, 'index'])->name('list');
     Route::get('/products/{id}', [ProductController::class, 'show'])->name('show');
     Route::post('/products', [ProductController::class, 'store'])->name('save');
-    Route::put('/products', [ProductController::class, 'update'])->name('update');
-    Route::delete('/products', [ProductController::class, 'remove'])->name('remove');
+    Route::put('/products/{id}', [ProductController::class, 'update'])->name('update');
+    Route::delete('/products/{id}', [ProductController::class, 'destroy'])->name('remove');
 });
